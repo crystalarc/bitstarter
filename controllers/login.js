@@ -2,7 +2,7 @@
 
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 var db = require('../database.js');
 var config = require('../config.js');
 var MySQLStore = require('express-mysql-session')(session);
@@ -58,6 +58,9 @@ module.exports = function(app) {
 
 		var usernameReq = req.body.username;
 		var passwordReq = req.body.password;
+
+		console.log(usernameReq);
+
 		db.knex('users')
 		.where({username: usernameReq })
 		.select('password')
@@ -65,6 +68,7 @@ module.exports = function(app) {
 			if (!result || !result[0]){ // not found
 				res.send('Wrong username!');
 			}
+			console.log(bcrypt.hashSync("pass"));
 			var hash = result[0].password;
 			bcrypt.compare(passwordReq, hash, function(error, ressult, callback) {
 				if (ressult){
@@ -72,9 +76,9 @@ module.exports = function(app) {
 					// req.session.regenerate(function(err) {
 					req.session.user = {username: usernameReq};
 					// }) // closing regenerate
-					var sessionUser= req.session.user.username;
+					var sessionUser = req.session.user.username;
 					res.send('Congratulations ' + sessionUser + '! You are logged!')
-				}else{
+				} else {
 					// Wrong username/password.
 					res.send('Wrong username/password!');
 				}

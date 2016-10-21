@@ -1,5 +1,5 @@
 var prompt = require('prompt');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 var db = require('./database.js');
 
 
