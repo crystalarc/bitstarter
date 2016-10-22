@@ -59,8 +59,6 @@ module.exports = function(app) {
 		var usernameReq = req.body.username;
 		var passwordReq = req.body.password;
 
-		console.log(usernameReq);
-
 		db.knex('users')
 		.where({username: usernameReq })
 		.select('password')
@@ -68,7 +66,6 @@ module.exports = function(app) {
 			if (!result || !result[0]){ // not found
 				res.send('Wrong username!');
 			}
-			console.log(bcrypt.hashSync("pass"));
 			var hash = result[0].password;
 			bcrypt.compare(passwordReq, hash, function(error, ressult, callback) {
 				if (ressult){
